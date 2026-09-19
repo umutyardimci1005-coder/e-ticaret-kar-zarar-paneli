@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///C:/Users/ASPA/Downloads/index(1).html -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E-Ticaret Kâr/Zarar Paneli</title>
+<style>
+:root{--bg:#0b1020;--card:#121a31;--line:#27345e;--txt:#eef2ff;--muted:#9eabd0;--accent:#6ea8fe;--good:#64d98b;--bad:#ff7d8a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1200px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap}
+h1{margin:0;font-size:24px}h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card,.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card b{display:block;font-size:22px;margin-top:7px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}input,select,button{width:100%;padding:11px;border-radius:10px;border:1px solid #33446f;background:#0d1428;color:white;font-size:15px}
+button{background:var(--accent);color:#081124;font-weight:700;cursor:pointer}.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}.actions button{width:auto}
+.table{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:950px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted)}
+.good{color:var(--good)}.bad{color:var(--bad)}.reportbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.reportbar>div{min-width:180px}
+@media(max-width:800px){.cards,.grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){.cards,.grid{grid-template-columns:1fr}.wrap{padding:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="head"><div><h1>📊 E-Ticaret Kâr / Zarar Paneli</h1><div class="muted">Pazaryeri bazlı satış, maliyet ve gerçek kârlılık takibi</div></div></div>
+
+ <div class="cards">
+  <div class="card"><span class="muted">Toplam Ciro</span><b id="kCiro">₺0,00</b></div>
+  <div class="card"><span class="muted">Ürün Maliyeti</span><b id="kMaliyet">₺0,00</b></div>
+  <div class="card"><span class="muted">Komisyon + Ekstra</span><b id="kGider">₺0,00</b></div>
+  <div class="card"><span class="muted">Net Kâr</span><b id="kKar">₺0,00</b></div>
+ </div>
+
+ <div class="box">
+  <h2>Satış Ekle</h2>
+  <form id="form">
+   <div class="grid">
+    <div><label>Tarih</label><input id="tarih" type="date" required=""></div>
+    <div><label>Platform</label><select id="platform"><option>Trendyol</option><option>Ticimax</option><option>Hepsiburada</option><option>FLO</option><option>LCW</option><option>Temu</option><option>Pazarama</option><option>İdefix</option><option>DeFactoFit</option></select></div>
+    <div><label>Ürün / SKU</label><input id="sku" placeholder="Örn. MOVE-7" required=""></div>
+    <div><label>Adet</label><input id="adet" type="number" min="1" value="1" required=""></div>
+    <div><label>Birim Satış Fiyatı (₺)</label><input id="fiyat" type="number" min="0" step=".01" required=""></div>
+    <div><label>Birim Ürün Maliyeti (₺)</label><input id="maliyet" type="number" min="0" step=".01" required=""></div>
+    <div><label>Komisyon (%)</label><input id="komisyon" type="number" min="0" step=".01" value="0"></div>
+    <div><label>Ekstra Gider (₺)</label><input id="ekstra" type="number" min="0" step=".01" value="0"></div>
+   </div>
+   <div class="actions"><button type="submit">Satışı Kaydet</button></div>
+  </form>
+ </div>
+
+ <div class="box" style="margin-top:14px">
+  <h2>Sabah Satış Raporu</h2>
+  <div class="reportbar"><div><label>Rapor Tarihi</label><input id="raporTarih" type="date"></div><button id="dun" type="button" style="width:auto">Dünü Getir</button><button id="csv" type="button" style="width:auto">CSV İndir</button></div>
+  <div class="table"><table><thead><tr><th>Ürün</th><th>Adet</th><th>Ciro</th><th>Ürün Maliyeti</th><th>Ort. Komisyon</th><th>Ekstra Gider</th><th>Net Kâr</th></tr></thead><tbody id="rapor"><tr><td colspan="7" class="muted">Bu tarihte kayıt yok.</td></tr></tbody></table></div>
+ </div>
+
+ <div class="box" style="margin-top:14px">
+  <h2>Satış Kayıtları</h2>
+  <div class="table"><table><thead><tr><th>Tarih</th><th>Platform</th><th>Ürün</th><th>Adet</th><th>Ciro</th><th>Maliyet</th><th>Komisyon</th><th>Ekstra</th><th>Net Kâr</th><th></th></tr></thead><tbody id="liste"></tbody></table></div>
+ </div>
+</div>
+<script>
+const $=id=>document.getElementById(id), key="eticaret_satis_v1";
+let data=JSON.parse(localStorage.getItem(key)||"[]");
+const iso=d=>{let x=new Date(d);return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
+$("tarih").value=iso(new Date()); let yd=new Date();yd.setDate(yd.getDate()-1);$("raporTarih").value=iso(yd);
+const tl=n=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY"}).format(n||0);
+function calc(x){let c=x.adet*x.fiyat,m=x.adet*x.maliyet,k=c*x.komisyon/100,net=c-m-k-x.ekstra;return{c,m,k,net}}
+function save(){localStorage.setItem(key,JSON.stringify(data));render()}
+function render(){
+ let tc=0,tm=0,tg=0,tk=0;$("liste").innerHTML="";
+ data.slice().reverse().forEach((x,ri)=>{let a=calc(x);tc+=a.c;tm+=a.m;tg+=a.k+x.ekstra;tk+=a.net;let i=data.length-1-ri;
+ $("liste").insertAdjacentHTML("beforeend",`<tr><td>${x.tarih}</td><td>${x.platform}</td><td>${x.sku}</td><td>${x.adet}</td><td>${tl(a.c)}</td><td>${tl(a.m)}</td><td>${tl(a.k)}</td><td>${tl(x.ekstra)}</td><td class="${a.net>=0?'good':'bad'}">${tl(a.net)}</td><td><button data-del="${i}" style="padding:6px 9px">Sil</button></td></tr>`)});
+ $("kCiro").textContent=tl(tc);$("kMaliyet").textContent=tl(tm);$("kGider").textContent=tl(tg);$("kKar").textContent=tl(tk);
+ document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{data.splice(+b.dataset.del,1);save()});report()
+}
+function report(){
+ let day=$("raporTarih").value, map={};data.filter(x=>x.tarih===day).forEach(x=>{let a=calc(x),z=map[x.sku]||(map[x.sku]={adet:0,c:0,m:0,k:0,e:0,net:0});z.adet+=x.adet;z.c+=a.c;z.m+=a.m;z.k+=a.k;z.e+=x.ekstra;z.net+=a.net});
+ $("rapor").innerHTML=Object.entries(map).map(([sku,z])=>`<tr><td>${sku}</td><td>${z.adet}</td><td>${tl(z.c)}</td><td>${tl(z.m)}</td><td>${z.c?("%"+(z.k/z.c*100).toFixed(2)):"%0"}</td><td>${tl(z.e)}</td><td class="${z.net>=0?'good':'bad'}">${tl(z.net)}</td></tr>`).join("")||'<tr><td colspan="7" class="muted">Bu tarihte kayıt yok.</td></tr>'
+}
+$("form").onsubmit=e=>{e.preventDefault();data.push({tarih:$("tarih").value,platform:$("platform").value,sku:$("sku").value.trim().toUpperCase(),adet:+$("adet").value,fiyat:+$("fiyat").value,maliyet:+$("maliyet").value,komisyon:+$("komisyon").value||0,ekstra:+$("ekstra").value||0});save();$("sku").value="";$("fiyat").value="";$("maliyet").value=""}
+$("raporTarih").onchange=report;$("dun").onclick=()=>{let d=new Date();d.setDate(d.getDate()-1);$("raporTarih").value=iso(d);report()}
+$("csv").onclick=()=>{let day=$("raporTarih").value,rows=[["Tarih","Platform","Urun","Adet","Ciro","Urun Maliyeti","Komisyon","Ekstra Gider","Net Kar"]];data.filter(x=>x.tarih===day).forEach(x=>{let a=calc(x);rows.push([x.tarih,x.platform,x.sku,x.adet,a.c,a.m,a.k,x.ekstra,a.net])});let blob=new Blob(["\ufeff"+rows.map(r=>r.join(";")).join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`satis-raporu-${day}.csv`;a.click();URL.revokeObjectURL(a.href)}
+render();
+</script>
+</body></html>
