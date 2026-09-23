@@ -1,102 +1,34 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/ASPA/Downloads/index(2)%20(1).html -->
-<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>E-Ticaret Kâr/Zarar Paneli</title>
+<!-- saved from url=(0051)file:///C:/Users/ASPA/Downloads/index(4)%20(1).html -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>E-Ticaret Kâr/Zarar Paneli V4</title>
 <style>
-:root{--bg:#0b1020;--card:#121a31;--line:#27345e;--txt:#eef2ff;--muted:#9eabd0;--accent:#6ea8fe;--good:#64d98b;--bad:#ff7d8a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:1200px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap}
-h1{margin:0;font-size:24px}h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card,.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-.card b{display:block;font-size:22px;margin-top:7px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}input,select,button{width:100%;padding:11px;border-radius:10px;border:1px solid #33446f;background:#0d1428;color:white;font-size:15px}
-button{background:var(--accent);color:#081124;font-weight:700;cursor:pointer}.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}.actions button{width:auto}
-.table{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:950px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted)}
-.good{color:var(--good)}.bad{color:var(--bad)}.reportbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.reportbar>div{min-width:180px}
-@media(max-width:800px){.cards,.grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){.cards,.grid{grid-template-columns:1fr}.wrap{padding:12px}}
-</style>
-</head>
-<body>
-<div class="wrap">
- <div class="head"><div><h1>📊 E-Ticaret Kâr / Zarar Paneli</h1><div class="muted">Pazaryeri bazlı satış, maliyet ve gerçek kârlılık takibi</div></div></div>
-
- <div class="cards">
-  <div class="card"><span class="muted">Toplam Ciro</span><b id="kCiro">₺0</b></div>
-  <div class="card"><span class="muted">Ürün Maliyeti</span><b id="kMaliyet">₺0</b></div>
-  <div class="card"><span class="muted">Komisyon + Ekstra</span><b id="kGider">₺0</b></div>
-  <div class="card"><span class="muted">Net Kâr</span><b id="kKar">₺0</b></div>
- </div>
-
- <div class="box">
-<h2>Ürün Maliyet Kartları</h2>
-<div class="grid"><div><label>Ürün / SKU</label><input id="mSku" placeholder="Örn. MOVE-7"></div><div><label>Birim Maliyet (₺)</label><input id="mCost" type="number" min="0" step=".01"></div><div style="align-self:end"><button id="mSave" type="button">Maliyeti Kaydet</button></div></div>
-<div class="table"><table><thead><tr><th>SKU</th><th>Birim Maliyet</th><th></th></tr></thead><tbody id="mList"></tbody></table></div>
-</div>
-<div class="box" style="margin-top:14px">
-<h2>Toplu Satış Yükle</h2>
-<div class="muted">CSV sütunları: Tarih; Platform; SKU; Adet; Birim Satış Fiyatı; Komisyon %; Ekstra Gider</div>
-<div class="actions"><input id="csvFile" type="file" accept=".csv,text/csv" style="max-width:420px"><button id="salesTemplate" type="button">CSV Şablonu İndir</button></div><div id="importMsg" class="muted"></div>
-</div>
-<div class="box" style="margin-top:14px">
-  <h2>Satış Ekle</h2>
-  <form id="form">
-   <div class="grid">
-    <div><label>Tarih</label><input id="tarih" type="date" required=""></div>
-    <div><label>Platform</label><select id="platform"><option>Trendyol</option><option>Ticimax</option><option>Hepsiburada</option><option>FLO</option><option>LCW</option><option>Temu</option><option>Pazarama</option><option>İdefix</option><option>DeFactoFit</option></select></div>
-    <div><label>Ürün / SKU</label><input id="sku" placeholder="Örn. MOVE-7" required=""></div>
-    <div><label>Adet</label><input id="adet" type="number" min="1" value="1" required=""></div>
-    <div><label>Birim Satış Fiyatı (₺)</label><input id="fiyat" type="number" min="0" step=".01" required=""></div>
-    <div><label>Birim Ürün Maliyeti (₺)</label><input id="maliyet" type="number" min="0" step=".01" required=""></div>
-    <div><label>Komisyon (%)</label><input id="komisyon" type="number" min="0" step=".01" value="0"></div>
-    <div><label>Ekstra Gider (₺)</label><input id="ekstra" type="number" min="0" step=".01" value="0"></div>
-   </div>
-   <div class="actions"><button type="submit">Satışı Kaydet</button></div>
-  </form>
- </div>
-
- <div class="box" style="margin-top:14px">
-  <h2>Sabah Satış Raporu</h2>
-  <div class="reportbar"><div><label>Rapor Tarihi</label><input id="raporTarih" type="date"></div><button id="dun" type="button" style="width:auto">Dünü Getir</button><button id="csv" type="button" style="width:auto">CSV İndir</button></div>
-  <div class="table"><table><thead><tr><th>Ürün</th><th>Adet</th><th>Ciro</th><th>Ürün Maliyeti</th><th>Ort. Komisyon</th><th>Ekstra Gider</th><th>Net Kâr</th></tr></thead><tbody id="rapor"></tbody></table></div>
- </div>
-
- <div class="box" style="margin-top:14px">
-  <h2>Satış Kayıtları</h2>
-  <div class="table"><table><thead><tr><th>Tarih</th><th>Platform</th><th>Ürün</th><th>Adet</th><th>Ciro</th><th>Maliyet</th><th>Komisyon</th><th>Ekstra</th><th>Net Kâr</th><th></th></tr></thead><tbody id="liste"></tbody></table></div>
- </div>
-</div>
-<script>
-const $=id=>document.getElementById(id), key="eticaret_satis_v1";
-let data=JSON.parse(localStorage.getItem(key)||"[]"),costKey="eticaret_maliyet_v2",costs=JSON.parse(localStorage.getItem(costKey)||"{}");
-const iso=d=>{let x=new Date(d);return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
-$("tarih").value=iso(new Date()); let yd=new Date();yd.setDate(yd.getDate()-1);$("raporTarih").value=iso(yd);
-const tl=n=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY"}).format(n||0);
-function calc(x){let c=x.adet*x.fiyat,m=x.adet*x.maliyet,k=c*x.komisyon/100,net=c-m-k-x.ekstra;return{c,m,k,net}}
-function save(){localStorage.setItem(key,JSON.stringify(data));render()}
-function renderCosts(){let ks=Object.keys(costs).sort();$("mList").innerHTML=ks.map(k=>`<tr><td>${k}</td><td>${tl(costs[k])}</td><td><button data-md="${k}" style="padding:6px 9px">Sil</button></td></tr>`).join("")||'<tr><td colspan="3" class="muted">Henüz maliyet tanımlanmadı.</td></tr>';document.querySelectorAll("[data-md]").forEach(b=>b.onclick=()=>{delete costs[b.dataset.md];localStorage.setItem(costKey,JSON.stringify(costs));renderCosts()})}
-function num(v){return Number(String(v||"").trim().replace(",", "."))||0}
-function dl(name,rows){let b=new Blob(["\ufeff"+rows.map(r=>r.join(";")).join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-function render(){
- let tc=0,tm=0,tg=0,tk=0;$("liste").innerHTML="";
- data.slice().reverse().forEach((x,ri)=>{let a=calc(x);tc+=a.c;tm+=a.m;tg+=a.k+x.ekstra;tk+=a.net;let i=data.length-1-ri;
- $("liste").insertAdjacentHTML("beforeend",`<tr><td>${x.tarih}</td><td>${x.platform}</td><td>${x.sku}</td><td>${x.adet}</td><td>${tl(a.c)}</td><td>${tl(a.m)}</td><td>${tl(a.k)}</td><td>${tl(x.ekstra)}</td><td class="${a.net>=0?'good':'bad'}">${tl(a.net)}</td><td><button data-del="${i}" style="padding:6px 9px">Sil</button></td></tr>`)});
- $("kCiro").textContent=tl(tc);$("kMaliyet").textContent=tl(tm);$("kGider").textContent=tl(tg);$("kKar").textContent=tl(tk);
- document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{data.splice(+b.dataset.del,1);save()});report()
-}
-function report(){
- let day=$("raporTarih").value, map={};data.filter(x=>x.tarih===day).forEach(x=>{let a=calc(x),z=map[x.sku]||(map[x.sku]={adet:0,c:0,m:0,k:0,e:0,net:0});z.adet+=x.adet;z.c+=a.c;z.m+=a.m;z.k+=a.k;z.e+=x.ekstra;z.net+=a.net});
- $("rapor").innerHTML=Object.entries(map).map(([sku,z])=>`<tr><td>${sku}</td><td>${z.adet}</td><td>${tl(z.c)}</td><td>${tl(z.m)}</td><td>${z.c?("%"+(z.k/z.c*100).toFixed(2)):"%0"}</td><td>${tl(z.e)}</td><td class="${z.net>=0?'good':'bad'}">${tl(z.net)}</td></tr>`).join("")||'<tr><td colspan="7" class="muted">Bu tarihte kayıt yok.</td></tr>'
-}
-$("form").onsubmit=e=>{e.preventDefault();let s=$("sku").value.trim().toUpperCase(),mc=$("maliyet").value!==""?+$("maliyet").value:(costs[s]||0);data.push({tarih:$("tarih").value,platform:$("platform").value,sku:s,adet:+$("adet").value,fiyat:+$("fiyat").value,maliyet:mc,komisyon:+$("komisyon").value||0,ekstra:+$("ekstra").value||0});if(mc){costs[s]=mc;localStorage.setItem(costKey,JSON.stringify(costs))}save();renderCosts();$("sku").value="";$("fiyat").value="";$("maliyet").value=""}
-$("sku").oninput=()=>{let s=$("sku").value.trim().toUpperCase();if(costs[s]!=null)$("maliyet").value=costs[s]};
-$("mSave").onclick=()=>{let s=$("mSku").value.trim().toUpperCase(),c=+$("mCost").value;if(!s)return;costs[s]=c;localStorage.setItem(costKey,JSON.stringify(costs));renderCosts();$("mSku").value="";$("mCost").value=""};
-$("salesTemplate").onclick=()=>dl("satis-yukleme-sablonu.csv",[["Tarih","Platform","SKU","Adet","Birim Satis Fiyati","Komisyon %","Ekstra Gider"],["2026-09-18","Trendyol","MOVE-7","2","799.90","18","75"]]);
-$("csvFile").onchange=async e=>{let f=e.target.files[0];if(!f)return,t=await f.text(),ls=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean),sep=ls[0].includes(";")?";":",",n=0,miss=new Set();for(let i=1;i<ls.length;i++){let c=ls[i].split(sep),s=(c[2]||"").trim().toUpperCase();if(!s)continue;let mc=costs[s]||0;if(!mc)miss.add(s);data.push({tarih:(c[0]||"").trim(),platform:(c[1]||"").trim(),sku:s,adet:num(c[3]),fiyat:num(c[4]),maliyet:mc,komisyon:num(c[5]),ekstra:num(c[6])});n++}save();$("importMsg").textContent=n+" satış satırı yüklendi."+(miss.size?" Maliyeti tanımsız: "+[...miss].join(", "):" Tüm maliyetler eşleşti.");e.target.value=""};
-renderCosts();
-$("raporTarih").onchange=report;$("dun").onclick=()=>{let d=new Date();d.setDate(d.getDate()-1);$("raporTarih").value=iso(d);report()}
-$("csv").onclick=()=>{let day=$("raporTarih").value,rows=[["Tarih","Platform","Urun","Adet","Ciro","Urun Maliyeti","Komisyon","Ekstra Gider","Net Kar"]];data.filter(x=>x.tarih===day).forEach(x=>{let a=calc(x);rows.push([x.tarih,x.platform,x.sku,x.adet,a.c,a.m,a.k,x.ekstra,a.net])});let blob=new Blob(["\ufeff"+rows.map(r=>r.join(";")).join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`satis-raporu-${day}.csv`;a.click();URL.revokeObjectURL(a.href)}
-render();
+:root{--bg:#0b1020;--card:#121a31;--line:#2b3b68;--txt:#eef2ff;--muted:#9eabd0;--accent:#6ea8fe;--good:#69dc93;--bad:#ff7d8a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.wrap{max-width:1280px;margin:auto;padding:22px}h1{margin:0;font-size:26px}h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:18px 0}.card,.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}.card b{display:block;font-size:20px;margin-top:6px}.box{margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}input,select,button{width:100%;padding:10px 11px;border-radius:10px;border:1px solid #3a4b78;background:#0d1428;color:#fff;font-size:14px}button{background:var(--accent);color:#081124;font-weight:750;cursor:pointer}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.actions button{width:auto}.table{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:1050px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);font-size:12.5px}th{color:#b8c5ed;position:sticky;top:0;background:var(--card)}.good{color:var(--good)}.bad{color:var(--bad)}.pill{display:inline-block;padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px}.msg{margin-top:10px;font-size:13px;color:#c9d5ff}.warn{color:#ffd479}.head{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap}
+@media(max-width:950px){.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.cards,.grid{grid-template-columns:1fr}.wrap{padding:12px}}
+</style><script src="./index_files/xlsx.full.min.js.indir"></script></head><body><div class="wrap">
+<div class="head"><div><h1>📊 E-Ticaret Kâr / Zarar Paneli <span class="pill">V4</span></h1><div class="muted">Entegra Ayrıntılı Excel → ürün bazlı günlük kârlılık raporu</div></div></div>
+<div class="cards"><div class="card"><span class="muted">Toplam Ciro</span><b id="kCiro">₺0,00</b></div><div class="card"><span class="muted">Satılan Adet</span><b id="kAdet">0</b></div><div class="card"><span class="muted">Ürün Maliyeti</span><b id="kMaliyet">₺0,00</b></div><div class="card"><span class="muted">Komisyon</span><b id="kKomisyon">₺0,00</b></div><div class="card"><span class="muted">Ekstra Gider</span><b id="kEkstra">₺0,00</b></div><div class="card"><span class="muted">Net Kâr</span><b id="kKar" class="good">₺0,00</b></div></div>
+<div class="box"><h2>1. Entegra Ayrıntılı Excel Yükle</h2><div class="grid"><div style="grid-column:span 2"><label>Entegra .xlsx dosyası</label><input id="entegraFile" type="file" accept=".xlsx,.xls"></div><div><label>Rapor Tarihi</label><input id="reportDate" type="date"></div><div><label>Platform</label><select id="platformFilter"><option value="">Tümü</option></select></div></div><div id="entegraMsg" class="msg">Dosyanı değiştirmeden doğrudan buraya yükleyebilirsin.</div><div class="actions"><button id="clearSales" type="button">İçe Aktarılan Satışları Temizle</button></div></div>
+<div class="box"><h2>2. Ürün Maliyet Kartları</h2><div class="grid"><div><label>Model No / SKU</label><input id="mSku" placeholder="Örn. NKT07"></div><div><label>Birim Maliyet (₺)</label><input id="mCost" type="number" min="0" step="0.01"></div><div style="align-self:end"><button id="mSave">Maliyeti Kaydet</button></div></div><div class="table"><table><thead><tr><th>Model No / SKU</th><th>Birim Maliyet</th><th></th></tr></thead><tbody id="costBody"><tr><td colspan="3">Henüz maliyet kartı yok.</td></tr></tbody></table></div></div>
+<div class="box"><h2>3. Ekstra Gider Ekle</h2><div class="grid"><div><label>Tarih</label><input id="eDate" type="date"></div><div><label>Platform (opsiyonel)</label><input id="ePlatform" placeholder="Örn. trendyol"></div><div><label>Açıklama</label><input id="eDesc" placeholder="Kargo / hizmet / reklam vb."></div><div><label>Tutar (₺)</label><input id="eAmount" type="number" min="0" step="0.01"></div></div><div class="actions"><button id="eSave">Ekstra Gideri Kaydet</button></div></div>
+<div class="box"><h2>Sabah Satış Raporu</h2><div class="muted">Seçili tarihte ürün bazında adet, ciro, maliyet, ortalama komisyon, ekstra gider ve net kâr.</div><div class="actions"><button id="yesterday">Dünü Getir</button><button id="csvOut">Raporu CSV İndir</button></div><div class="table"><table><thead><tr><th>Platform</th><th>Model</th><th>Ürün</th><th>Adet</th><th>Ciro</th><th>Ürün Maliyeti</th><th>Ort. Komisyon</th><th>Komisyon Tutarı</th><th>Ekstra Gider</th><th>Net Kâr</th></tr></thead><tbody id="reportBody"><tr><td colspan="10">Seçili tarih için satış bulunamadı.</td></tr></tbody></table></div></div>
+<div class="box"><h2>Eksik Maliyetler</h2><div id="missing" class="msg">Tüm ürünlerin maliyeti tanımlı.</div></div>
+</div><script>
+const $=id=>document.getElementById(id), money=n=>new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY'}).format(Number(n)||0), num=v=>{if(typeof v==='number')return v;let s=String(v??'').trim().replace(/\s/g,'');if(!s)return 0;if(s.includes(',')&&s.includes('.'))s=s.lastIndexOf(',')>s.lastIndexOf('.')?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');else if(s.includes(','))s=s.replace(',','.');return Number(s)||0};
+let sales=JSON.parse(localStorage.getItem('v4_sales')||'[]'), costs=JSON.parse(localStorage.getItem('v4_costs')||'{}'), extras=JSON.parse(localStorage.getItem('v4_extras')||'[]');
+const save=()=>{localStorage.setItem('v4_sales',JSON.stringify(sales));localStorage.setItem('v4_costs',JSON.stringify(costs));localStorage.setItem('v4_extras',JSON.stringify(extras));render()};
+function dateOnly(v){if(v instanceof Date){let y=v.getFullYear(),m=String(v.getMonth()+1).padStart(2,'0'),d=String(v.getDate()).padStart(2,'0');return `${y}-${m}-${d}`}let s=String(v||''),m=s.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);return m?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:s.slice(0,10)}
+function currentRows(){let d=$('reportDate').value,p=$('platformFilter').value;return sales.filter(x=>(!d||x.date===d)&&(!p||x.platform===p))}
+function renderCosts(){$('costBody').innerHTML=Object.entries(costs).sort().map(([s,c])=>`<tr><td>${esc(s)}</td><td>${money(c)}</td><td><button onclick="delCost('${encodeURIComponent(s)}')">Sil</button></td></tr>`).join('')||'<tr><td colspan="3">Henüz maliyet kartı yok.</td></tr>'}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+window.delCost=s=>{delete costs[decodeURIComponent(s)];save()};
+function report(){let rows=currentRows(), groups={};for(const x of rows){let k=x.platform+'|'+x.sku,g=groups[k]||(groups[k]={platform:x.platform,sku:x.sku,name:x.name,qty:0,revenue:0,commission:0,cost:0});g.qty+=x.qty;g.revenue+=x.revenue;g.commission+=x.commission;g.cost+=(costs[x.sku]||0)*x.qty}let gs=Object.values(groups);let d=$('reportDate').value,p=$('platformFilter').value,ex=extras.filter(e=>(!d||e.date===d)&&(!p||!e.platform||e.platform===p));let extraTotal=ex.reduce((a,e)=>a+e.amount,0),totalRevenue=gs.reduce((a,g)=>a+g.revenue,0);for(const g of gs)g.extra=totalRevenue?extraTotal*(g.revenue/totalRevenue):0;return {gs,extraTotal}}
+function render(){renderCosts();let plats=[...new Set(sales.map(x=>x.platform).filter(Boolean))].sort(),cur=$('platformFilter').value;$('platformFilter').innerHTML='<option value="">Tümü</option>'+plats.map(p=>`<option ${p===cur?'selected':''}>${esc(p)}</option>`).join('');let {gs,extraTotal}=report(),qty=0,rev=0,cost=0,comm=0;for(const g of gs){qty+=g.qty;rev+=g.revenue;cost+=g.cost;comm+=g.commission}let profit=rev-cost-comm-extraTotal;$('kCiro').textContent=money(rev);$('kAdet').textContent=qty;$('kMaliyet').textContent=money(cost);$('kKomisyon').textContent=money(comm);$('kEkstra').textContent=money(extraTotal);$('kKar').textContent=money(profit);$('kKar').className=profit>=0?'good':'bad';$('reportBody').innerHTML=gs.map(g=>{let avg=g.revenue?g.commission/g.revenue*100:0,n=g.revenue-g.cost-g.commission-g.extra;return `<tr><td>${esc(g.platform)}</td><td><b>${esc(g.sku)}</b></td><td>${esc(g.name)}</td><td>${g.qty}</td><td>${money(g.revenue)}</td><td>${money(g.cost)}</td><td>%${avg.toFixed(2)}</td><td>${money(g.commission)}</td><td>${money(g.extra)}</td><td class="${n>=0?'good':'bad'}"><b>${money(n)}</b></td></tr>`}).join('')||'<tr><td colspan="10">Seçili tarih için satış bulunamadı.</td></tr>';let miss=[...new Set(currentRows().filter(x=>!costs[x.sku]).map(x=>x.sku))];$('missing').innerHTML=miss.length?`<span class="warn">${miss.length} model için maliyet tanımlı değil:</span> ${miss.map(esc).join(', ')}`:'Tüm ürünlerin maliyeti tanımlı.'}
+$('mSave').onclick=()=>{let s=$('mSku').value.trim().toUpperCase(),c=num($('mCost').value);if(!s||c<=0)return alert('Model No ve maliyet gir.');costs[s]=c;$('mSku').value='';$('mCost').value='';save()};
+$('eSave').onclick=()=>{let date=$('eDate').value,amount=num($('eAmount').value);if(!date||amount<=0)return alert('Tarih ve gider tutarı gir.');extras.push({date,platform:$('ePlatform').value.trim().toLowerCase(),desc:$('eDesc').value.trim(),amount});$('eAmount').value='';$('eDesc').value='';save()};
+$('reportDate').onchange=render;$('platformFilter').onchange=render;$('yesterday').onclick=()=>{let d=new Date();d.setDate(d.getDate()-1);$('reportDate').value=dateOnly(d);render()};
+$('clearSales').onclick=()=>{if(confirm('İçe aktarılan tüm satış kayıtları silinsin mi?')){sales=[];save();$('entegraMsg').textContent='Satış kayıtları temizlendi.'}};
+$('entegraFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{if(typeof XLSX==='undefined')throw Error('Excel okuyucu yüklenemedi. İnternet bağlantısını kontrol et.');let wb=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]];/* Entegra dosyasında dimension A1 hatalı olabildiği için gerçek aralığı hücrelerden bul */let refs=Object.keys(ws).filter(k=>k[0]!=='!');if(refs.length){let range=refs.reduce((r,k)=>{let c=XLSX.utils.decode_cell(k);r.s.r=Math.min(r.s.r,c.r);r.s.c=Math.min(r.s.c,c.c);r.e.r=Math.max(r.e.r,c.r);r.e.c=Math.max(r.e.c,c.c);return r},{s:{r:1e9,c:1e9},e:{r:0,c:0}});ws['!ref']=XLSX.utils.encode_range(range)}let rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});if(!rows.length)throw Error('Excel içinde kayıt bulunamadı.');let existing=new Set(sales.map(x=>x.key)),added=0,dup=0;for(const r of rows){let sku=String(r['Model No']||r['Mağaza Ürün Kodu']||r['Barkod']||'').trim().toUpperCase();if(!sku)continue;let qty=num(r['Adet'])||1,detail=num(r['Sipariş Detay Fiyat']),total=num(r['Toplam']),revenue=detail||total,commission=num(r['Komisyon'])||num(r['Vergi Dahil Toplam Komisyon']),platform=String(r['Entegrasyon']||r['Kaynak']||'Bilinmiyor').trim().toLowerCase(),order=String(r['Sipariş Numarası']||r['ID']||''),variant=String(r['Varyant Kodu']||r['Barkod']||''),key=[order,sku,variant,revenue,qty].join('|');if(existing.has(key)){dup++;continue}sales.push({key,date:dateOnly(r['Tarih']),platform,sku,name:String(r['Ürün İsmi']||r['Mağaza Ürünü']||''),qty,revenue,commission,order});existing.add(key);added++}save();$('entegraMsg').innerHTML=`<b>${added}</b> ürün satırı içe aktarıldı. ${dup} tekrar kayıt atlandı. Exceldeki <b>Model No, Adet, Sipariş Detay Fiyat, Komisyon, Komisyon Oranı, Entegrasyon</b> alanları kullanıldı.`}catch(err){$('entegraMsg').textContent='Hata: '+err.message}e.target.value=''};
+$('csvOut').onclick=()=>{let {gs}=report(),lines=[['Platform','Model','Ürün','Adet','Ciro','Ürün Maliyeti','Ort. Komisyon %','Komisyon Tutarı','Ekstra Gider','Net Kar']];for(const g of gs){let avg=g.revenue?g.commission/g.revenue*100:0,n=g.revenue-g.cost-g.commission-g.extra;lines.push([g.platform,g.sku,g.name,g.qty,g.revenue.toFixed(2),g.cost.toFixed(2),avg.toFixed(2),g.commission.toFixed(2),g.extra.toFixed(2),n.toFixed(2)])}let csv='\ufeff'+lines.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='sabah-satis-raporu-'+($('reportDate').value||'tum')+'.csv';a.click();URL.revokeObjectURL(a.href)};
+let today=new Date();$('reportDate').value=dateOnly(today);$('eDate').value=dateOnly(today);render();
 </script>
 </body></html>
